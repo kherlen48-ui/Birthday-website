@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday!</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #ffe0e0, #fff0f5);
+      overflow-x: hidden;
+      text-align: center;
+    }
+
+    h1 {
+      color: #ff4f81;
+      font-size: 60px;
+      margin-top: 50px;
+    }
+
+    h2 {
+      color: #ff66a3;
+      font-size: 40px;
+    }
+
+    p {
+      font-size: 20px;
+      color: #555;
+      margin: 20px;
+    }
+
+    .card {
+      background: white;
+      display: inline-block;
+      padding: 30px 50px;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      margin-top: 50px;
+    }
+
+    .photo {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 20px 0;
+    }
+
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    button {
+      background-color: #ff4f81;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #ff66a3;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas class="confetti"></canvas>
+
+  <div class="card">
+    <h1>🎉 Happy Birthday! 🎉</h1>
+    <h2>Dear Dulguun</h2>
+    <img class="photo" src="https://via.placeholder.com/200" alt="Birthday Photo">
+    <p>Wishing you happiness, love, and lots of cake on your special day!</p>
+    <h3>25 Years Young! 🎂</h3>
+    <button onclick="alert('🎁 Surprise! Wishing you the best!')">Open Gift 🎁</button>
+  </div>
+
+  <script>
+    // Confetti animation
+    const canvas = document.querySelector('.confetti');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const confettiCount = 150;
+    const confetti = [];
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function Confetto() {
+      this.x = random(0, canvas.width);
+      this.y = random(-canvas.height, 0);
+      this.r = random(5, 15);
+      this.d = random(5, 10);
+      this.color = `hsl(${Math.floor(random(0, 360))}, 100%, 50%)`;
+      this.tilt = random(-10, 10);
+      this.tiltAngleIncrement = random(0.05, 0.12);
+      this.tiltAngle = 0;
+
+      this.draw = function() {
+        ctx.beginPath();
+        ctx.lineWidth = this.r / 2;
+        ctx.strokeStyle = this.color;
+        ctx.moveTo(this.x + this.tilt + this.r / 4, this.y);
+        ctx.lineTo(this.x + this.tilt, this.y + this.tilt + this.r / 4);
+        ctx.stroke();
+      }
+    }
+
+    function initConfetti() {
+      for (let i = 0; i < confettiCount; i++) {
+        confetti.push(new Confetto());
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(f => {
+        f.tiltAngle += f.tiltAngleIncrement;
+        f.y += (Math.cos(f.d) + 3 + f.r / 2) / 2;
+        f.tilt = Math.sin(f.tiltAngle) * 15;
+        if (f.y > canvas.height) {
+          f.y = -10;
+          f.x = random(0, canvas.width);
+        }
+        f.draw();
+      });
+      requestAnimationFrame(draw);
+    }
+
+    initConfetti();
+    draw();
+  </script>
+
+</body>
+</html>
